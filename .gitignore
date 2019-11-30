@@ -1,0 +1,6 @@
+dbs/*
+db-*/
+*.bak
+*.crt
+*.key
+
