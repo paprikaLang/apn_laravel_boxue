@@ -12,5 +12,18 @@
 */
 
 Route::get('/', function () {
-    return view('welcome');
+    if(Auth::check()) {
+        return redirect('/notifications');
+    }
+    else {
+        return redirect('/login');
+    }
+});
+
+Auth::routes();
+
+Route::middleware(['auth'])->group(function() {
+    Route::get('/{any}', function() {
+        return view('app');
+    });
 });
