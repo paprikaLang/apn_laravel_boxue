@@ -3,7 +3,11 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-
+use App\Http\Resources\NotificationCollection;
+use App\Device;
+use Illuminate\Support\Facades\Log;
+use App\Notification;
+use App\Events\NewNotification;
 class NotificationController extends Controller
 {
     /**
@@ -13,28 +17,28 @@ class NotificationController extends Controller
      */
     public function index()
     {
-        //
+        return new NotificationCollection(Notification::orderBy('updated_at', 'desc')->get());
     }
-
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
     public function create()
     {
         //
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
     public function store(Request $request)
     {
-        //
+        $validated = request()->validate([
+            'title' => 'required',
+            'body' => 'required',
+            'badge' => 'required',
+            'locale' => 'required',
+            'sound' => 'required',
+            'environment' => 'required'
+        ]);
+
+        $notification = Notification::create($validated);
+        event(new NewNotification($notification));
+
+        return response()->json($notification);
     }
 
     /**

@@ -31,12 +31,6 @@ class DeviceController extends Controller
         //
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
     public function store(Request $request)
     {
         $validator = Validator::make($request->all(), [
@@ -79,17 +73,29 @@ class DeviceController extends Controller
     {
         //
     }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, $id)
+    // $device 是路由绑定得到的put_request要修改的device ---
+    // Route::bind('device', function($value) { return Device();}
+    public function update(Device $device, Request $request)
     {
-        //
+        $validator = Validator::make($request->all(), [
+            'token' => 'required',
+            'locale' => 'required|integer',
+            'environment' => 'required|integer'
+        ]);
+
+        if ($validator->fails()) {
+            dd($validator->failed());
+            return response()->json([
+                'reason' => 'Missing or invalid parameters.'
+            ], 422);
+        }
+    
+        $device->token = $request->input('token');
+        $device->locale = $request->input('locale');
+        $device->environment = $request->input('environment');
+        $device->save();
+    
+        return response()->json(new DeviceResource($device));
     }
 
     /**

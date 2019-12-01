@@ -4,6 +4,8 @@ namespace App\Providers;
 
 use Illuminate\Foundation\Support\Providers\RouteServiceProvider as ServiceProvider;
 use Illuminate\Support\Facades\Route;
+use App\Device;
+
 
 class RouteServiceProvider extends ServiceProvider
 {
@@ -23,9 +25,11 @@ class RouteServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        //
-
         parent::boot();
+        //PUT /api/v1/devices/{device} 
+        Route::bind('device', function($value) {
+            return Device::where('uuid', $value)->first() ?? abort(404);
+        });
     }
 
     /**
