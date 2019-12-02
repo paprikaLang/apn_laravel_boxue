@@ -37,9 +37,13 @@ import axios from "axios";
 // import bus from '../eventBus';
 
 export default {
-    created() {
-        this.fetchNotifications();
+    mounted() {
+       this.fetchNotifications();
+
         bus.$on('notificationPushed', this.fetchNotifications);
+    },
+    beforeDestroy() {
+        bus.$off('notificationPushed', this.fetchNotifications);
     },
     data() {
         return {

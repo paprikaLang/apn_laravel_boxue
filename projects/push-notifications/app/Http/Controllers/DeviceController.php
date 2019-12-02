@@ -6,7 +6,7 @@ use Illuminate\Http\Request;
 use App\Http\Resources\DeviceCollection;
 use App\Device;
 use App\Http\Resources\Device as DeviceResource;
-
+use App\Events\DeviceRegistered;
 use Illuminate\Support\Facades\Validator;
 
 class DeviceController extends Controller
@@ -47,7 +47,7 @@ class DeviceController extends Controller
         }
     
         $record = new DeviceResource(Device::create($request->all()));
-        // broadcast(new DeviceRegistered($record));
+        event(new DeviceRegistered($record));
     
         return response()->json($record, 201);
     }

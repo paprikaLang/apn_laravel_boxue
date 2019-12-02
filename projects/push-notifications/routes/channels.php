@@ -14,3 +14,12 @@
 Broadcast::channel('App.User.{id}', function ($user, $id) {
     return (int) $user->id === (int) $id;
 });
+
+Broadcast::channel('device.table', function ($user) {
+    return true;
+});
+
+
+Broadcast::channel('news', function ($user, $id) {
+    return true;
+});

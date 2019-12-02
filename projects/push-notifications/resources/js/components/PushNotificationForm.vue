@@ -109,6 +109,7 @@ export default {
     async onSubmit() {
       try {
         const response  = await axios.post('/api/v1/notifications', this.form);
+        console.log(response);
         bus.$emit('notificationPushed');
       }catch( error){
         console.log(error);

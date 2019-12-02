@@ -35,6 +35,11 @@ import axios from "axios";
 export default {
     created() {
         this.fetchTokens();
+        window.echo_recv.channel('device.table')
+            .listen('DeviceRegistered', (e) => {
+                this.tableData.splice(0,0, e.device);
+                console.log('ssssssssssssssss');
+            });
     },
     data() {
         return {
