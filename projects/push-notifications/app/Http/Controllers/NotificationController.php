@@ -36,7 +36,7 @@ class NotificationController extends Controller
         ]);
 
         $notification = Notification::create($validated);
-        event(new NewNotification($notification));
+        // event(new NewNotification($notification));
 
         return response()->json($notification);
     }

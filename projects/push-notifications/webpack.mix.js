@@ -34,4 +34,4 @@ if (mix.inProduction()) {
     mix.version();
 }
 
-// mix.copyDirectory('node_modules/material-design-icons/iconfont', 'public/fonts');
+mix.copyDirectory('node_modules/material-design-icons/iconfont', 'public/fonts');
