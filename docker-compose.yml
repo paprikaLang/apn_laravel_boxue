@@ -7,6 +7,7 @@ services:
         image: ${CURRENT_NGINX_IMG}
         ports:
             - ${HOST_HTTP_PORT}:80
+            - ${HOST_HTTPS_PORT}:443
         volumes:
             - ${HOST_ROOT}:${CONTAINER_ROOT}
         networks:
@@ -28,6 +29,25 @@ services:
             MYSQL_PASSWORD: ${DB_PASSWORD}
             SERVICE_TAGS: dev 
             SERVICE_NAME: mysql
+        networks:
+            - bx-net
+    redis:
+        build:
+            context: ./redis
+        image: ${CURRENT_REDIS_IMG}
+        ports:
+            - ${HOST_REDIS_PORT}:6379 # debugging only
+        networks:
+            - bx-net
+
+    echo:
+        build:
+            context: ./echo-server
+        image: ${CURRENT_ECHO_IMG}
+        # We comment out the port because we forward the request
+        # to echo by Nginx internally.
+        #ports:
+        #    - ${HOST_ECHO_PORT}:6001 # debugging only
         networks:
             - bx-net
             

@@ -45,11 +45,18 @@ RUN sed -i '/listen = \/run\/php\/php7\.2-fpm\.sock/d' /etc/php/7.2/fpm/pool.d/w
 # The new config
 RUN echo 'listen = php:9000' >> /etc/php/7.2/fpm/pool.d/www.conf \
     && echo 'date.timezone = Asia/Shanghai' >> /etc/php/7.2/fpm/php.ini \
-    && echo 'display_errors = stderr' >> /etc/php/7.2/fpm/php.ini
-
+    && echo 'display_errors = stderr' >> /etc/php/7.2/fpm/php.ini \
+    && echo 'memory_limit = 256M' >> /etc/php/7.2/fpm/php.ini \
+    && echo 'post_max_size = 100M' >> /etc/php/7.2/fpm/php.ini \
+    && echo 'upload_max_filesize = 100M' >> /etc/php/7.2/fpm/php.ini 
+ 
 RUN ln -sf /usr/share/zoneinfo/Asia/Shanghai /etc/localtime
 
 # XDebug config
-COPY ./xdebug.ini /etc/php/7.2/mods-available/
+COPY ./config/xdebug.ini /etc/php/7.2/mods-available/
+# Opache config
+COPY ./config/opcache-recommended.ini  /etc/php/7.2/mods-available/
 
-CMD ["php-fpm7.2", "-F"]
+ENTRYPOINT ["php-fpm7.2"]
+
+CMD ["-F"]

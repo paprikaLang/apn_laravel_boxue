@@ -1,6 +1,6 @@
 server {
-    listen 80;
-    server_name localhost;
+    listen 443 ssl http2 default_server;
+    server_name apn.tiyo.io;
 
     root /var/www/push-notifications/current/public;
 
@@ -12,7 +12,7 @@ server {
     add_header X-Content-Type-Options "nosniff";
 
     location / {
-        try_files $uri $uri/ /index.php$query_string;
+        try_files $uri $uri/ /index.php$is_args$query_string;
     }
 
     location = /favicon.ico { access_log off; log_not_found off; }
@@ -27,7 +27,26 @@ server {
         include fastcgi_params;
     }
 
+    ssl_certificate      /etc/nginx/ssl/apn.tiyo.io.pem;
+    ssl_certificate_key  /etc/nginx/ssl/apn.tiyo.io-key.pem;
+
+    location /socket.io {
+         access_log /tmp/srv_socket.log;
+         proxy_pass http://echo:6001;
+         proxy_http_version 1.1;
+         proxy_set_header Upgrade $http_upgrade;
+         proxy_set_header Connection "Upgrade";
+         proxy_set_header Host $host;
+         proxy_cache_bypass $http_upgrade;
+    }
+
     location ~ /\.(?!well-known).* {
         deny all;
     }
- }
+}
+
+server {
+    listen 80;
+    server_name  apn.tiyo.io;
+    return 301 https://apn.tiyo.io$request_uri;
+}
